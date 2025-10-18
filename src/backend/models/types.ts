@@ -1,30 +1,60 @@
-import { ItemType } from "./classes";
 
+
+/**
+ * price - на будущее (для магазина)
+ */
 export type Item = {
-  itemType: ItemType;
+  id: number;
+  name: string;
+  price?: number;
 }
 
-export type Inventory = {
-  items: Item[];
+export type Weapon = {
+  charges: number[];
+  isDoubleDmg: boolean;
 }
 
 export type Member = {
   name: string;
   health: number;
-  isDealer: boolean;
-  lockCounter: number;
-  inventory: Inventory;
-
+  inventory: Item[];
+  isSkipping: 
 }
 
-export type GameStatus = {
-  isAcitve: boolean;
-  winner?: Member;
-};
 
-export type Opponets = {
-    currentMember: Member;
-    passiveMember: Member;
-}
+// export enum ItemType {
+//   HEALTHUP,
+//   MAGNIFIER, // лупа
+//   KNIFE,
+//   HANDCUFFS, // наручники
+//   BEER,
+// }
+
+// export type Item = {
+//   itemType: ItemType;
+// }
+
+// export type Inventory = {
+//   items: Item[];
+// }
+
+// export type Member = {
+//   name: string;
+//   health: number;
+//   isDealer: boolean;
+//   lockCounter: number;
+//   inventory: Inventory;
+
+// }
+
+// export type GameStatus = {
+//   isAcitve: boolean;
+//   winner?: Member;
+// };
+
+// export type Opponets = {
+//     currentMember: Member;
+//     passiveMember: Member;
+// }
 
 
