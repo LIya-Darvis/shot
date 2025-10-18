@@ -1,0 +1,24 @@
+.main-container {
+    color: rgba(255, 255, 255, 0.87);
+    background-color: #242424;
+    height: 100vh;
+    width: 100vw;
+}
+
+.head-container {
+    display: flex;
+    flex-direction: row;
+    background-color: #54545c;
+    justify-content: space-between;
+    padding: 1em;
+}
+
+.member-info {
+
+}
+
+.round-info {
+    padding: 0 2em;
+    border: 2px solid #ca9e25;
+}
+
