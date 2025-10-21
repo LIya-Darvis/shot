@@ -1,25 +1,43 @@
-
-
 /**
  * price - на будущее (для магазина)
  */
-export type Item = {
+export type TItem = {
   id: number;
   name: string;
   price?: number;
 }
 
-export type Weapon = {
+export type TWeapon = {
   charges: number[];
   isDoubleDmg: boolean;
 }
 
-export type Member = {
+export type TMember = {
   name: string;
+  maxHealth: number;
   health: number;
-  inventory: Item[];
-  isSkipping: 
+  inventory: TItem[];
+  isSkipping: boolean;
 }
+
+export enum TItemType {
+  KNIFE,
+  HANDCUFFS, // наручники
+  BATTERY, // для рации
+  WATER,
+  CIGARETTES,
+  BANDAGES, // бинты
+}
+
+export type TStep = {
+  weapon: TWeapon;
+  currentPlayer: TMember;
+  opponent: TMember;
+  currentItem: TItem;
+}
+
+
+
 
 
 // export enum ItemType {
