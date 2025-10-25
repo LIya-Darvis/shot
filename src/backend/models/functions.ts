@@ -1,14 +1,25 @@
 import { TMember, TWeapon } from './types';
 
-
 /**
  * выстрел  
  * (с учетом двойного урона)
  */
-export const makeShot = (opponent: TMember, weapon: TWeapon): TMember => {
+export const makeShot = (target: TMember, weapon: TWeapon): {newTarget: TMember, newWeapon: TWeapon} => {
+    const newCharges = [...weapon.charges];
+    const charge = newCharges.pop() || 0;
+
+    const damage = weapon.isDoubleDmg ? charge * 2 : charge;
+    
     return {
-        ...opponent,
-        health: opponent.health - (weapon.isDoubleDmg ? weapon.charges.pop() * 2 : weapon.charges.pop())
+        newTarget: {
+            ...target,
+            health: target.health - damage
+        },
+        newWeapon: {
+            ...weapon,
+            charges: newCharges,
+            isDoubleDmg: false
+        }
     }
 }
 
@@ -17,9 +28,11 @@ export const makeShot = (opponent: TMember, weapon: TWeapon): TMember => {
  * (для предмета "сигареты")
  */
 export const dropCharge = (weapon: TWeapon): TWeapon => {
-    weapon.charges.pop()
+    const newCharges = [...weapon.charges];
+    newCharges.pop()
     return {
         ...weapon,
+        charges: newCharges
     };
 }
 
@@ -28,7 +41,7 @@ export const dropCharge = (weapon: TWeapon): TWeapon => {
  * (для предмета "батарейка для рации")
  */
 export const chargeMessage = (weapon: TWeapon): number => {
-    console.log("Следующий патрон:", weapon.charges[0]);
+    console.log("Следующий патрон:", weapon.charges[weapon.charges.length - 1]);
     return weapon.charges[weapon.charges.length - 1];
 }
 
@@ -38,9 +51,10 @@ export const chargeMessage = (weapon: TWeapon): number => {
  */
 export const drinkWater = (currentPlayer: TMember): TMember => {
     const healthPoints = [-1, 2];
+    const healthUp = currentPlayer.health + healthPoints[Math.floor(Math.random() * 2)]
     return {
         ...currentPlayer,
-        health: currentPlayer.health += healthPoints[Math.floor(Math.random() * 2)]
+        health: currentPlayer.maxHealth < healthUp ? currentPlayer.maxHealth : healthUp
     }
 }
 
@@ -49,9 +63,10 @@ export const drinkWater = (currentPlayer: TMember): TMember => {
  * (для предмета "бинты")
  */
 export const healthUp = (currentPlayer: TMember): TMember => {
+    const healthPlus = ++currentPlayer.health;
     return {
         ...currentPlayer,
-        health: currentPlayer.health += 1
+        health: currentPlayer.maxHealth < healthPlus ? currentPlayer.maxHealth : healthPlus
     };
 }
 

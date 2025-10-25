@@ -6,15 +6,13 @@ import './styles.css';
 export const MainPage = () => {
     const initOpponent: TMember = { health: 6, inventory: [], isSkipping: false, maxHealth: 10, name: 'Диллер' };
     const initPlayer: TMember = { health: 6, inventory: [], isSkipping: false, maxHealth: 10, name: 'Игрок' };
-    const initWeapon: TWeapon = { charges: [0, 1, 0, 1, 0, 1, 0, 1], isDoubleDmg: false }
+    const initWeapon: TWeapon = { charges: [0, 1, 0, 1, 1, 1, 1, 1], isDoubleDmg: false }
 
     const [player, setPlayer] = useState<TMember>(initPlayer);
     const [opponent, setOpponent] = useState<TMember>(initOpponent);
     const [weapon, setWeapon] = useState<TWeapon>(initWeapon);
     const [isWaiting, setIsWaiting] = useState<boolean>(false);
 
-    console.log(player);
-    console.log(opponent);
     console.log(weapon);
 
     // ToDo:
@@ -22,30 +20,33 @@ export const MainPage = () => {
     // ✔ реализовать псевдодействия оппонента
     // - добавить генерацию инвентаря
     // - поправить сброс наручников после двух выстрелов подряд
-    // - добавить выстрел в себя
+    // = добавить выстрел в себя
+
+    // На неизвесттое будущее
+    // - добавить заклинивание оружия
+    // - добавить магазин предметов (перед раундом)
 
     const stupidOpponent = () => {
-        setOpponent(healthUp(opponent));
-        setTimeout(() => { }, 2000);
+        // setOpponent(healthUp(opponent));
 
-        setPlayer(makeShot(player, weapon))
-        // сбрасываем дабл урон (на всякий)
-        setWeapon({ ...weapon, isDoubleDmg: false })
-        setTimeout(() => { }, 2000);
+        const { newTarget, newWeapon } = makeShot(player, weapon);
+
+        const newCharges = [...weapon.charges];
+        newCharges.pop();
+
+        setPlayer(newTarget);
+        setWeapon(newWeapon)
 
         // сбрасываем наручники (на всякий)
-        setPlayer({ ...player, isSkipping: false });
-        setTimeout(() => { }, 2000);
+        // setPlayer({ ...player, isSkipping: false });
     }
 
     useEffect(() => {
         if (isWaiting) {
             stupidOpponent();
-            setTimeout(() => { }, 1000);
             // проверка на наручники игрока
             // if (player.isSkipping) {
             //     console.log('> *анимация проверки наручников на игроке*');
-            //     setTimeout(() => { }, 2000);
             //     stupidOpponent();
             // }
             setIsWaiting(false);
@@ -63,12 +64,23 @@ export const MainPage = () => {
             </div>
             <div className='game-container'>
                 <button disabled={isWaiting} onClick={() => {
-                    setOpponent(makeShot(opponent, weapon))
-                    // сбрасываем дабл урон (на всякий)
-                    setWeapon({ ...weapon, isDoubleDmg: false })
+                    const { newTarget, newWeapon } = makeShot(opponent, weapon);
+                    setOpponent(newTarget);
+                    setWeapon(newWeapon);
                     setIsWaiting(!opponent.isSkipping);
                 }
                 }>Выстрел!</button>
+                <button disabled={isWaiting} onClick={() => {
+                    const { newTarget, newWeapon } = makeShot(player, weapon);
+                    const newCharges = [...weapon.charges];
+                    const currentCharge = newWeapon.charges[newWeapon.charges.length - 1];
+
+                    setPlayer(newTarget)
+                    // сбрасываем дабл урон (на всякий)
+                    setWeapon({ ...weapon, charges: newCharges, isDoubleDmg: false })
+                    setIsWaiting(currentCharge === 1 ? true : false);
+                }
+                }>Выстрел в себя</button>
                 <button disabled={isWaiting} onClick={() => setOpponent(useHandcuffs(opponent))}>Повесить наручники</button>
                 <button disabled={isWaiting} onClick={() => setWeapon(dropCharge(weapon))}>Покурить</button>
                 <button disabled={isWaiting} onClick={() => chargeMessage(weapon)}>Рация</button>
@@ -78,14 +90,3 @@ export const MainPage = () => {
         </div>
     )
 }
-
-
-
-
-// export const Button = (props) => {
-//     return (
-//         <> {symbol === 'plus' && <Icon className='fa fa-plus-circle' />}
-//             <button onClick={props.onClick} />
-//         </>
-//     );
-// }

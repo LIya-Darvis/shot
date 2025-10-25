@@ -1,11 +1,15 @@
 import './styles.css'
 
-export const ItemButton = () => {
-    return (
-        <div>
-            <button >
+interface IButton {
+    onClick: void;
+    isDisabled: boolean;
 
-            </button>
-        </div>
+}
+
+export const ItemButton = (params: IButton) => {
+    return (
+        <button onClick={() => params.onClick}>
+
+        </button>
     )
 }
